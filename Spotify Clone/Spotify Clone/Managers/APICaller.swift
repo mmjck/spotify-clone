@@ -62,7 +62,7 @@ final class APICaller {
     
     
     public func getNewReleases(completion: @escaping ((Result<NewReleasesResponse, Error>)) -> Void ){
-        createRequest(with: URL(string: "\(EndPoints.baseURLAPI)/browse/new-releases?limit=2"), type: .GET){
+        createRequest(with: URL(string: "\(EndPoints.baseURLAPI)/browse/new-releases?limit=10"), type: .GET){
             request in
             let task = URLSession.shared.dataTask(with: request){
                 data, _, error in
@@ -87,7 +87,7 @@ final class APICaller {
     public func getRecommendations(genres: Set<String>, completion: @escaping ((Result<RecommendationResponse, Error>)) -> Void ){
         let seeds = genres.joined(separator: ",")
         createRequest(
-            with: URL(string: "\(EndPoints.baseURLAPI)/recommendations?limit=2&seed_genres=\(seeds)"),
+            with: URL(string: "\(EndPoints.baseURLAPI)/recommendations?limit=10&seed_genres=\(seeds)"),
                       type: .GET
         ){
             request in
@@ -99,10 +99,9 @@ final class APICaller {
                 }
                 
                 do {
-                     let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
-                     print(json)
+                     //let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
+                     //print(json)
                      let result = try JSONDecoder().decode(RecommendationResponse.self, from: data)
-                     print(result)
                      completion(.success(result))
                 }catch {
                     completion(.failure(APIError.failedToGetData))
@@ -141,7 +140,7 @@ final class APICaller {
     }
     
     public func getFlayPlaylists(completion: @escaping ((Result<FeaturedPlaylistsResponse, Error>)) -> Void ){
-        createRequest(with: URL(string: "\(EndPoints.baseURLAPI)/browse/featured-playlists?limit=2"), type: .GET){
+        createRequest(with: URL(string: "\(EndPoints.baseURLAPI)/browse/featured-playlists?limit=10"), type: .GET){
             request in
             let task = URLSession.shared.dataTask(with: request){
                 data, _, error in
@@ -154,7 +153,7 @@ final class APICaller {
                     //let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
                     // print(json)
                     let result = try JSONDecoder().decode(FeaturedPlaylistsResponse.self, from: data)
-                    print(result)
+                    completion(.success(result))
                 }catch {
                     completion(.failure(APIError.failedToGetData))
                 }
