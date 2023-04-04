@@ -29,6 +29,66 @@ final class APICaller {
     
     
     private init(){
+        
+    }
+    
+    // MARK: - Playlist
+    public func getPlaylistDetails(for playlist: Playlist, completion: @escaping (Result<PlaylistDetailsResponse, Error>) -> Void ){
+        createRequest(with: URL(string: "\(EndPoints.baseURLAPI)/playlists/\(playlist.id)" ), type: .GET) { baseRequest in
+            let task = URLSession.shared.dataTask(with: baseRequest) {
+                data, _, error in
+                guard let data = data, error == nil else {
+                    completion(.failure(APIError.failedToGetData))
+                    return
+                }
+
+                do{
+                     //let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
+                    //print(json)
+                    let result = try JSONDecoder().decode(PlaylistDetailsResponse.self, from: data)
+                    completion(.success(result))
+//                    print(result)
+                }catch {
+                    print(error)
+                    completion(.failure(error))
+                }
+                    
+            }
+            
+            
+            task.resume()
+            
+        }
+    }
+    
+    
+    // MARK: - Albums
+    public func getAlbumDetails(for album: Album, completion: @escaping (Result<AlbumDetailsResponse, Error>) -> Void ){
+        createRequest(with: URL(string: "\(EndPoints.baseURLAPI)/albums/\(album.id)" ), type: .GET) { baseRequest in
+            let task = URLSession.shared.dataTask(with: baseRequest) {
+                data, _, error in
+                guard let data = data, error == nil else {
+                    completion(.failure(APIError.failedToGetData))
+                    return
+                }
+
+                do{
+                     //let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
+                    //print(json)
+                    let result = try JSONDecoder().decode(AlbumDetailsResponse.self, from: data)
+                    completion(.success(result))
+//                    print(result)
+                }catch {
+                    print(error)
+                    completion(.failure(error))
+                }
+                    
+            }
+            
+            
+            task.resume()
+            
+        }
     }
     
     
