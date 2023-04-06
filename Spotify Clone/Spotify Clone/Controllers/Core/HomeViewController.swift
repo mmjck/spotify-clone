@@ -31,6 +31,8 @@ class HomeViewController: UIViewController {
     private var tracks: [AudioTrack] = []
     private var playlists: [Playlist] = []
     
+    
+    
     private var collectionView: UICollectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout:  UICollectionViewCompositionalLayout{ sectionIndex, _ -> NSCollectionLayoutSection? in
@@ -64,6 +66,7 @@ class HomeViewController: UIViewController {
         
         view.addSubview(spinner)
         configureCollectionView()
+      
         fetchData()
         
     }
@@ -89,8 +92,8 @@ class HomeViewController: UIViewController {
         let supplementaryViews = [
             NSCollectionLayoutBoundarySupplementaryItem(
                 layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1),
-                heightDimension: .absolute(50)
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .absolute(50)
                 ),
                 elementKind:UICollectionView.elementKindSectionHeader,
                 alignment: .top
@@ -106,20 +109,26 @@ class HomeViewController: UIViewController {
                     heightDimension: .fractionalHeight(1)
                 )
             )
-            item.contentInsets = NSDirectionalEdgeInsets(top: 2, leading: 2, bottom: 2, trailing: 2)
+            item.contentInsets = NSDirectionalEdgeInsets(
+                top: 2,
+                leading: 2,
+                bottom: 2,
+                trailing: 2)
             // Group
-            let verticalGroup = NSCollectionLayoutGroup.vertical(layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1),
-                heightDimension: .absolute(120)
-            ),
-                                                                 repeatingSubitem: item, count: 3
+            let verticalGroup = NSCollectionLayoutGroup.vertical(
+                layoutSize: NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .absolute(120)
+                ),
+                repeatingSubitem: item, count: 3
             )
             
-            let horizontalGroup = NSCollectionLayoutGroup.vertical(layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(0.9),
-                heightDimension: .absolute(360)
-            ),
-                                                                   repeatingSubitem: verticalGroup, count: 1
+            let horizontalGroup = NSCollectionLayoutGroup.vertical(
+                layoutSize: NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(0.9),
+                    heightDimension: .absolute(360)
+                ),
+                repeatingSubitem: verticalGroup, count: 1
             )
             
             // Section
@@ -173,11 +182,11 @@ class HomeViewController: UIViewController {
             // Group
             
             
-            let group = NSCollectionLayoutGroup.vertical(layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1),
-                heightDimension: .absolute(80)
-            ),
-                                                         repeatingSubitem: item, count: 1
+            let group = NSCollectionLayoutGroup.vertical(
+                layoutSize: NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .absolute(80)),
+                repeatingSubitem: item, count: 1
             )
             
             let _section = NSCollectionLayoutSection(group: group)
@@ -194,11 +203,11 @@ class HomeViewController: UIViewController {
             )
             item.contentInsets = NSDirectionalEdgeInsets(top: 2, leading: 2, bottom: 2, trailing: 2)
             // Group
-            let group = NSCollectionLayoutGroup.vertical(layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1),
-                heightDimension: .absolute(120)
-            ),
-                                                         repeatingSubitem: item, count: 1
+            let group = NSCollectionLayoutGroup.vertical(
+                layoutSize: NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .absolute(120)),
+                repeatingSubitem: item, count: 1
             )
             
             // Section
@@ -308,7 +317,7 @@ class HomeViewController: UIViewController {
                     artworkURL: URL(string: $0.images.first?.url ?? ""),
                     numberOfTracks: $0.total_tracks,
                     artistName: $0.artists.first?.name ?? ""
-            )
+                )
                 
             })))
             sections.append(.featuredPlaylists(viewModel: playlists.compactMap({
@@ -405,7 +414,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
             let playlist = playlists[indexPath.row]
             let playlistVC = PlaylistViewController(playlist: playlist)
             navigationController?.pushViewController(playlistVC, animated: true)
-
+            
             break
         case .recommendedTracks:
             break

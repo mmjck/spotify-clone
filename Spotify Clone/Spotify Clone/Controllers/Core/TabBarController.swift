@@ -23,7 +23,7 @@ class TabBarViewController: UITabBarController {
         libraryVC.title = "Library"
         
         
-        let searchVC = SearchResultsViewController()
+        let searchVC = SearchViewController()
         searchVC.title = "Search"
         
         
