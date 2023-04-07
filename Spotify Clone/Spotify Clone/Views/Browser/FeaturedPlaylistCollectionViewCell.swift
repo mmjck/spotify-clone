@@ -9,7 +9,7 @@ import UIKit
 
 
 class FeaturedPlaylistCollectionViewCell: UICollectionViewCell {
-        static let identifier = "FeaturedPlaylistCollectionViewCell"
+    static let identifier = "FeaturedPlaylistCollectionViewCell"
     
     
     private lazy var playlistCoverImageView: UIImageView  = {
