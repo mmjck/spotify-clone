@@ -284,6 +284,40 @@ final class APICaller {
             }
         }
     
+    public func search(with query: String, completion: @escaping (Result<[SearchResult], Error>) -> Void ){
+        createRequest(with: URL(string: "\(EndPoints.baseURLAPI)/search?limit=10&type=album,artist,playlist,track&q=\(query.addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed) ?? "")"),
+                      type: .GET) { baseRequest in
+            
+            print(baseRequest.url?.absoluteString ?? "none")
+            let task = URLSession.shared.dataTask(with: baseRequest) {
+                data, _, error in
+                guard let data = data, error == nil else {
+                    completion(.failure(APIError.failedToGetData))
+                    return
+                }
+                
+                do{
+                     let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
+                     print(json)
+                    
+                    let result = try JSONDecoder().decode(SearchResultResponse.self, from: data)
+                    var searchResults: [SearchResult] = []
+                    
+                    searchResults.append(contentsOf: result.tracks.items.compactMap({ .track(model: $0) }))
+                    searchResults.append(contentsOf: result.albums.items.compactMap({ .album(model: $0) }))
+                    searchResults.append(contentsOf: result.artists.items.compactMap({ .artists(model: $0) }))
+                    searchResults.append(contentsOf: result.playlists.items.compactMap({ .playlists(model: $0) }))
+                    
+                    completion(.success(searchResults))
+                }catch {
+                    print(error)
+                    completion(.failure(error))
+                }
+            }
+            task.resume()
+        }
+    }
+    
 }
 
 

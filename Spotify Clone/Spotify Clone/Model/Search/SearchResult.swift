@@ -6,3 +6,9 @@
 //
 
 import Foundation
+enum SearchResult {
+    case artists(model: Artist)
+    case album(model: Album)
+    case track(model: AudioTrack)
+    case playlists(model: Playlist)
+}

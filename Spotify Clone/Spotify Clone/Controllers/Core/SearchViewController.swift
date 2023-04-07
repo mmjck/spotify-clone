@@ -63,6 +63,7 @@ class SearchViewController: UIViewController {
         
         self.view.backgroundColor = .systemBackground
         searchController.searchResultsUpdater = self
+        searchController.searchBar.delegate = self
         self.navigationItem.searchController = searchController
         
         self.view.addSubview(collectionView)
@@ -84,7 +85,6 @@ class SearchViewController: UIViewController {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let model):
-                    
                     self?.categories = model
                     self?.collectionView.reloadData()
                     
@@ -145,13 +145,50 @@ extension SearchViewController: UICollectionViewDataSource, UICollectionViewDele
 
 extension SearchViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        guard let resultsController = searchController.searchResultsController as? SearchResultsViewController, let query = searchController.searchBar.text, !query.trimmingCharacters(in: .whitespaces).isEmpty else {
-            return
-        }
-        
-        print(query)
+       
         
         
         //        APICaller.shared.
+    }
+}
+
+extension SearchViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+    guard let resultsController = self.searchController.searchResultsController as? SearchResultsViewController, let query = searchBar.text, !query.trimmingCharacters(in: .whitespaces).isEmpty else {
+            return
+        }
+        
+        resultsController.delegate = self
+        APICaller.shared.search(with: query){ result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let model):
+                    resultsController.update(with: model)
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
+        }
+    }
+}
+
+
+extension SearchViewController: SearchResultsViewControllerDelegate{
+    func didTapResult(_ result: SearchResult) {
+    
+        switch result {
+        case .artists(let model):
+            break
+        case .album(let model):
+            let vc = AlbumViewController(album: model)
+            navigationController?.pushViewController(vc, animated: true)
+        case .track(let model):
+            break
+        case .playlists(let model):
+            let vc = PlaylistViewController(playlist: model)
+            navigationController?.pushViewController(vc, animated: true)           
+        }
+        
+    
     }
 }
