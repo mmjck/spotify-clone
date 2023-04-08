@@ -90,6 +90,12 @@ class SearchResultsViewController: UIViewController {
 
 }
 extension SearchResultsViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.sections[section].results.count
     }

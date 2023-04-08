@@ -417,6 +417,8 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
             
             break
         case .recommendedTracks:
+            let track = tracks[indexPath.row]
+            PlaybackPresenter.startPlayback(from: self, track: track)
             break
         case .newReleases:
             let album = newAlbumns[indexPath.row]

@@ -9,9 +9,10 @@ import UIKit
 
 class PlaylistViewController: UIViewController {
     
-    private let playlist: Playlist
+    private var playlist: Playlist
     private var viewModels: [RecommendedTrackCellViewModel] = [RecommendedTrackCellViewModel]()
-     
+    private var tracks: [AudioTrack] = []
+    
     private let collectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout:
@@ -55,7 +56,7 @@ class PlaylistViewController: UIViewController {
         })
     )
         
-    required init(playlist: Playlist) {
+    init(playlist: Playlist) {
         self.playlist = playlist
         super.init(nibName: nil, bundle: nil)
         
@@ -104,6 +105,7 @@ class PlaylistViewController: UIViewController {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let model):
+                    self?.tracks = model.tracks.items.compactMap({$0.track })
                     self?.viewModels = model.tracks.items.compactMap({
                         RecommendedTrackCellViewModel(name: $0.track.name,
                                                       artworkUrl: URL(string: $0.track.album?.images.first?.url ?? ""), artistName: $0.track.artists.first?.name ?? "")
@@ -190,7 +192,14 @@ extension PlaylistViewController {
 
 extension PlaylistViewController: PlaylistHeaderCollectionReusableViewDelegate {
     func playlistHeaderCollectionReusableViewDidTapPlayAll(_ header: PlaylistHeaderCollectionReusableView) {
-        // start play in queue
-        print("play all music")
+        PlaybackPresenter.startPlayback(from: self, tracks: tracks)
+
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        let index = indexPath.row
+        let track = tracks[index]
+        PlaybackPresenter.startPlayback(from: self, track: track)
     }
 }
