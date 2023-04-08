@@ -4,5 +4,5 @@
 
 # in Progress
 
-## stoped in part 19/29
-https://www.youtube.com/watch?v=Hht7WJcUv4I&list=PL5PR3UyfTWve9ZC7Yws0x6EGjBO2FGr0o&index=19
+## stoped in part 20/29
+https://www.youtube.com/watch?v=e2-EGeCNs34&list=PL5PR3UyfTWve9ZC7Yws0x6EGjBO2FGr0o&index=20
