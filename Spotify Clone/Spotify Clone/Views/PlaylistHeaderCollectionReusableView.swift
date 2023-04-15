@@ -109,6 +109,7 @@ class PlaylistHeaderCollectionReusableView: UICollectionReusableView {
 
 extension PlaylistHeaderCollectionReusableView {
     @objc private func didTapPlayAll(){
+        print("called")
         self.delegate?.playlistHeaderCollectionReusableViewDidTapPlayAll(self)
     }
 }

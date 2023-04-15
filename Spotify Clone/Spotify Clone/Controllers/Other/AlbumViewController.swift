@@ -101,13 +101,14 @@ class AlbumViewController: UIViewController {
         collectionView.frame = view.bounds
     }
     
-    
+    private var tracks = [AudioTrack]()
     
     public func fetchData(){
         APICaller.shared.getAlbumDetails(for: album) {[weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let model):
+                    self?.tracks = model.tracks.items
                     self?.viewModels = model.tracks.items.compactMap({
                         AlbumCollectionViewCellViewModel(
                             name: $0.name,
@@ -140,6 +141,9 @@ extension AlbumViewController: UICollectionViewDelegate, UICollectionViewDataSou
         
         cell.backgroundColor = .red
         cell.configure(with: viewModels[indexPath.row])
+        
+        
+        
         return cell
     }
     
@@ -147,7 +151,9 @@ extension AlbumViewController: UICollectionViewDelegate, UICollectionViewDataSou
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         
-        // Play song
+        var track = tracks[indexPath.row]
+        track.album = self.album
+        PlaybackPresenter.shared.startPlayback(from: self, track: track)
     }
     
     
@@ -174,8 +180,19 @@ extension AlbumViewController: UICollectionViewDelegate, UICollectionViewDataSou
         
         
         header.configure(with: headerVM)
-        //header.delegate = self
+        
         return header
+    }
+}
+
+extension AlbumViewController: PlaylistHeaderCollectionReusableViewDelegate{
+    func playlistHeaderCollectionReusableViewDidTapPlayAll(_ header: PlaylistHeaderCollectionReusableView) {
+        let tracksWithAlbum: [AudioTrack] = tracks.compactMap({
+            var _track = $0
+            _track.album = self.album
+            return _track
+        })
+        PlaybackPresenter.shared.startPlayback(from: self, tracks: tracksWithAlbum)
     }
 }
 
